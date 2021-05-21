@@ -1,8 +1,14 @@
-def quick_sort(array, p, r):
+def sort(array):
+    p = 0
+    r = len(array)-1
+    quickSort(array, p ,r)
+
+
+def quickSort(array, p, r):
     if p < r:
         q = partition(array, p, r)
-        quick_sort(array, p, q-1)
-        quick_sort(array, q+1, r)
+        quickSort(array, p, q-1)
+        quickSort(array, q+1, r)
 
 
 def partition(array, p, r):
@@ -13,13 +19,4 @@ def partition(array, p, r):
             array[smaller], array[i] = array[i], array[smaller]
             smaller = smaller + 1
     array[smaller], array[r] = array[r], array[smaller]
-
-
-
     return smaller
-
-array = [4, 8, 27, 5, 4, 57, 1, 23, 9, 5, 8, 22, 6, 12, 100]
- 
-
-quick_sort(array, 0, len(array) - 1)
-print(array)
