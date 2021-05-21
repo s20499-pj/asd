@@ -10,13 +10,21 @@ def mergeSortRec(arr, beg, end, maxele):
         merge(arr, beg, mid, end, maxele)
 
 
-
 def merge(arr, beg, mid, end, maxele):
+    #left side of marge array
     i = beg
+    #rigt side of marge array
     j = mid + 1
+    #pointer to new place
     k = beg
-
+    #print("")
     while (i <= mid and j <= end):
+        """print('compare',
+              arr[i] % maxele,
+              arr[j] % maxele,
+              'and put in k',
+              arr[k])
+        print(arr)"""
         if (arr[i] % maxele <= arr[j] % maxele):
             arr[k] = arr[k] + (arr[i] % maxele) * maxele
             k += 1
