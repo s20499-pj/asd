@@ -46,3 +46,5 @@ def merge(arr, beg, mid, end, maxele):
 
     for i in range(beg, end + 1):
         arr[i] = arr[i] // maxele
+
+        
