@@ -1,4 +1,4 @@
-from bitstring import Bits  #pip install bitstring
+from bitstring import BitArray #pip install bitstring
 
 class Node(object):
 
@@ -61,8 +61,7 @@ def huffmanCodeTable(node, binString='0b'):
     if not node.rightChild is None:
         huffmanCodeTable(node.rightChild, binString+'1')
     if node.leftChild is None and node.rightChild is None:
-        node.bits = Bits().join([binString])
-        #node.bits = binString
+        node.bits = BitArray(binString)
         huffmanTable.update({node.character: node.bits})
 
 def encode(text):
@@ -91,17 +90,19 @@ def decode(root, text):
     return decoded
 
 
-string = "barbara ma rabarbar"
+input = open("input.txt", "r")
+output = open("output.bin", "wb")
+
 huffmanTable = dict()
+string = input.read()
 arr = createTree(string)
 huffmanCodeTable(arr[0])
+cipher = encode(string)
 
 for i in huffmanTable:
     print(i, huffmanTable[i].bin)
 
 
-cipher = encode(string).bin
-print(cipher)
-print(decode(arr[0], cipher))
-
-
+output.write(cipher.tobytes())
+input.close
+output.close
