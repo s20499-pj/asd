@@ -89,20 +89,22 @@ def decode(root, text):
                 currNode = currNode.rightChild
     return decoded
 
-
-input = open("input.txt", "r")
-output = open("output.bin", "wb")
-
 huffmanTable = dict()
-string = input.read()
-arr = createTree(string)
-huffmanCodeTable(arr[0])
-cipher = encode(string)
 
-for i in huffmanTable:
-    print(i, huffmanTable[i].bin)
+with open("input.txt", "r") as inputtxt:
+    string = inputtxt.read()
+    arr = createTree(string)
+    huffmanCodeTable(arr[0])
+    cipher = encode(string)
+    for i in huffmanTable:
+        print(i, huffmanTable[i].bin)
+
+with open("output.bin", "wb") as output:
+    output.write(cipher.tobytes())
 
 
-output.write(cipher.tobytes())
-input.close
-output.close
+with open("output.bin", mode="rb") as output:
+    bits = BitArray(output.read()).bin
+
+with open("output.txt", "w") as outputtxt:
+    outputtxt.write(decode(arr[0], bits))
