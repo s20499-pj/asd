@@ -10,64 +10,70 @@ class Node(object):
         self.leftChild = leftChild
         self.rightChild = rightChild
 
+class Queue:
 
-def createTree(text):
-    tree = []
-    for char in text:
-        find = False
-        for i in tree:
-            if char == i.character:
-                i.value +=1
-                find = True
-                break
-        if not find:
-            tree.append(Node(1, char, ))
-    sortMinTree(tree)
-    huffmanTree(tree)
-    return tree
+    queue = []
 
-def sortMinTree(tree):
-    l = len(tree)
-    for i in tree[::-1]:
-        x =  tree.index(i)
-        smallest = x
-        leftChild = 2*x+1
-        rightChild = 2*x+2
+    def __init__(self, text):
+        for char in text:
+            find = False
+            for i in self.queue:
+                if char == i.character:
+                    i.value +=1
+                    find = True
+                    break
+            if not find:
+                self.queue.append(Node(1, char, ))
+        self.sortMin()
+        self.huffmanTree()
 
-        if leftChild < l and tree[leftChild].value < tree[smallest].value:
-            smallest = leftChild
+    def sortMin(self):
+        tree = self.queue
+        l = len(tree)
+        for i in tree[::-1]:
+            x =  tree.index(i)
+            smallest = x
+            leftChild = 2*x+1
+            rightChild = 2*x+2
 
-        if rightChild < l and tree[rightChild].value < tree[smallest].value:
-            smallest = rightChild
+            if leftChild < l and tree[leftChild].value < tree[smallest].value:
+                smallest = leftChild
 
-        if x != smallest:
-            tree[x], tree[smallest] = tree[smallest], tree[x]
+            if rightChild < l and tree[rightChild].value < tree[smallest].value:
+                smallest = rightChild
 
+            if x != smallest:
+                tree[x], tree[smallest] = tree[smallest], tree[x]
 
-def huffmanTree(tree):
-    while(len(tree) > 1):
-        a = tree[0]
-        tree[0] = tree.pop(-1)
-        sortMinTree(tree)
+    def huffmanTree(self):
+        while(len(self.queue) > 1):
+            a = self.queue[0]
+            self.queue[0] = self.queue.pop(-1)
+            self.sortMin()
 
-        b = tree[0]
-        ab = Node(a.value + b.value, a.character + b.character, a , b)
-        tree[0] = ab
-        sortMinTree(tree)
+            b = self.queue[0]
+            ab = Node(a.value + b.value, a.character + b.character, a , b)
+            self.queue[0] = ab
+            self.sortMin()
 
-def huffmanCodeTable(node, binString='0b'):
-    if not node.leftChild is None:
-        huffmanCodeTable(node.leftChild, binString+'0')
-    if not node.rightChild is None:
-        huffmanCodeTable(node.rightChild, binString+'1')
-    if node.leftChild is None and node.rightChild is None:
-        node.bits = BitArray(binString)
-        huffmanTable.update({node.character: node.bits})
+class huffmanDict:
+
+    d = dict()
+
+    def __init__(self, node, binString='0b'):
+        if not node.leftChild is None:
+            huffmanDict(node.leftChild, binString+'0')
+        if not node.rightChild is None:
+            huffmanDict(node.rightChild, binString+'1')
+        if node.leftChild is None and node.rightChild is None:
+            node.bits = BitArray(binString)
+            self.d.update({node.character: node.bits})
+
 
 def encode(text):
     cipher = ""
     for i in text:
-        cipher += huffmanTable.get(i)
+        cipher += dictionary.d.get(i)
     return cipher
 
 
@@ -89,15 +95,14 @@ def decode(root, text):
                 currNode = currNode.rightChild
     return decoded
 
-huffmanTable = dict()
 
 with open("input.txt", "r") as inputtxt:
     string = inputtxt.read()
-    arr = createTree(string)
-    huffmanCodeTable(arr[0])
+    huffmanTree = Queue(string).queue
+    dictionary = huffmanDict(huffmanTree[0])
     cipher = encode(string)
-    for i in huffmanTable:
-        print(i, huffmanTable[i].bin)
+    for i in dictionary.d:
+        print(i, dictionary.d[i].bin)
 
 with open("output.bin", "wb") as output:
     output.write(cipher.tobytes())
@@ -107,4 +112,4 @@ with open("output.bin", mode="rb") as output:
     bits = BitArray(output.read()).bin
 
 with open("output.txt", "w") as outputtxt:
-    outputtxt.write(decode(arr[0], bits))
+    outputtxt.write(decode(huffmanTree[0], bits))
