@@ -45,16 +45,27 @@ class Queue:
             if x != smallest:
                 tree[x], tree[smallest] = tree[smallest], tree[x]
 
+
     def huffmanTree(self):
-        while(len(self.queue) > 1):
+        while(len(self.queue) > 2):
             a = self.queue[0]
             self.queue[0] = self.queue.pop(-1)
             self.sortMin()
 
             b = self.queue[0]
-            ab = Node(a.value + b.value, a.character + b.character, a , b)
-            self.queue[0] = ab
+            self.queue[0] = self.queue.pop(-1)
             self.sortMin()
+            ab = Node(a.value + b.value, a.character + b.character, a , b)
+            self.queue.append(ab)
+            self.sortMin()
+
+        a = self.queue[0]
+        self.queue[0] = self.queue.pop(-1)
+        self.sortMin()
+        b = self.queue[0]
+        ab = Node(a.value + b.value, a.character + b.character, a , b)
+        self.queue[0] = ab
+
 
 class huffmanDict:
 
