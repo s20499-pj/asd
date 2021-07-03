@@ -1,4 +1,6 @@
 from bitstring import BitArray #pip install bitstring
+import sys
+sys.setrecursionlimit(10**6)
 
 class Node(object):
 
@@ -28,22 +30,29 @@ class Queue:
         self.huffmanTree()
 
     def sortMin(self):
-        tree = self.queue
-        l = len(tree)
-        for i in tree[::-1]:
-            x =  tree.index(i)
-            smallest = x
-            leftChild = 2*x+1
-            rightChild = 2*x+2
+        length = len(self.queue)
+        self.sortMinReq(self.queue[-1], length)
 
-            if leftChild < l and tree[leftChild].value < tree[smallest].value:
+
+    def sortMinReq(self, j, length):
+        l = length
+        x =  self.queue.index(j)
+        smallest = x
+        leftChild = 2*x+1
+        rightChild = 2*x+2
+
+        if leftChild < l and self.queue[leftChild].value < self.queue[smallest].value:
                 smallest = leftChild
 
-            if rightChild < l and tree[rightChild].value < tree[smallest].value:
+        if rightChild < l and self.queue[rightChild].value < self.queue[smallest].value:
                 smallest = rightChild
 
-            if x != smallest:
-                tree[x], tree[smallest] = tree[smallest], tree[x]
+        if x != smallest:
+            self.queue[x], self.queue[smallest] = self.queue[smallest], self.queue[x]
+
+        next = self.queue.index(j)-1
+        if next >= 0:
+            self.sortMinReq(self.queue[next], l)
 
 
     def huffmanTree(self):
